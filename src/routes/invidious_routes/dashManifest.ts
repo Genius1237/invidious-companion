@@ -70,7 +70,7 @@ dashManifest.get("/:videoId", async (c) => {
                         return true;
                     }
                 } else {
-                    return false;
+                    return true;
                 }
             });
 
