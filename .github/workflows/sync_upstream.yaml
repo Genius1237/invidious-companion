@@ -1,0 +1,28 @@
+name: "Sync upstream"
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          token: ${{ secrets.PUSH_TOKEN }}
+          # Important to set this
+          # Otherwise only last git commit is fetched
+          # And git is unaware of all previous commits while rebasing
+          fetch-depth: 0
+      - name: Sync with upstream
+        env:
+          GH_TOKEN: ${{ secrets.PUSH_TOKEN }}
+        run: |
+          git config user.name "Anirudh Srinivasan"
+          git config user.email "anirudhsriniv@gmail.com"
+          git remote add upstream https://github.com/iv-org/invidious-companion/
+          git fetch upstream
+          git rebase upstream/master master
+          git push -f  https://Genius1237:${GH_TOKEN}@github.com/Genius1237/invidious-companion.git master
